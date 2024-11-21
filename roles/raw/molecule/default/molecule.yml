@@ -1,0 +1,14 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: delegated
+platforms:
+  - name: instance
+provisioner:
+  name: ansible
+  inventory:
+    links:
+      hosts: inventory.yml
+verifier:
+  name: ansible

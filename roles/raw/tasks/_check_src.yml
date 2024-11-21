@@ -1,0 +1,34 @@
+---
+# tasks file for raw
+- name: Block that get src to be able to compare with dst
+  block:
+    - name: Check if src is available using HEAD request
+      ansible.builtin.uri:
+        url: '{{ raw_src }}'
+        method: HEAD
+      register: return_src
+      failed_when: return_src.status != 200
+
+    - name: Validate etag is defined in the header
+      ansible.builtin.assert:
+        that:
+          - return_src.etag is defined
+        fail_msg: "etag is not supported on src server"
+        quiet: true
+
+    - name: Validate ETag
+      ansible.builtin.assert:
+        that:
+          - return_dst.etag == return_src.etag
+        fail_msg: "etags does not match. Content has probably been updated"
+        quiet: true
+  rescue:
+    - name: Set raw_mirror_needed because etags does not match
+      ansible.builtin.set_fact:
+        raw_mirror_needed: true
+
+  always:
+    - name: Debug return_src
+      ansible.builtin.debug:
+        var: return_src
+      when: return_src.status != 200

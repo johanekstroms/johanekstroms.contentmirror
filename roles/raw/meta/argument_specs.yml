@@ -1,0 +1,23 @@
+---
+argument_specs:
+  # anchor definitions
+  # roles/rawcontentmirror/tasks/main.yml entry point
+  main:
+    short_description: The Main entry point of the role rawcontentmirror
+    description:
+      - The Main entry point of the role rawcontentmirror that will do the following
+      - validate input
+      - validate destination does not exist
+      - if exist - desired state reached
+      - if not exist - download source and upload to destination
+    author:
+      - Johan Ekström
+    options:
+      raw_src: &raw_src
+        type: str
+        required: true
+        description: The source from where the content should be mirrored
+      raw_dst: &raw_dst
+        type: str
+        required: true
+        description: The destination where the content should be mirrored to

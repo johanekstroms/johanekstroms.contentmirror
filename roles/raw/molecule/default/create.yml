@@ -1,0 +1,55 @@
+---
+- name: Create
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  no_log: "{{ molecule_no_log }}"
+  tasks:
+    # - name: Create instance local web server that support GET, HEAD and POST
+    # docker run ...
+    - name: Re-create a local web content server
+      community.docker.docker_container:
+        name: unittest_webcontentserver
+        image: webcontentserver
+        recreate: true
+        auto_remove: true
+        published_ports:
+          - 8080:8080
+
+    - name: Upload the content to local web content server
+      ansible.builtin.uri:
+        url: 'http://localhost:8080/content/src'
+        method: POST
+        body: 'thisissomecontent'
+        headers:
+          Content-Type: 'text/plain'
+        status_code: 201
+
+    # TODO: Developer must implement and populate 'server' variable
+
+    # - name: Create instance config
+    #   when: server.changed | default(false) | bool  # noqa no-handler
+    #   block:
+    #     - name: Populate instance config dict  # noqa jinja
+    #       ansible.builtin.set_fact:
+    #         instance_conf_dict: {
+    #           'instance': "{{ }}",
+    #           'address': "{{ }}",
+    #           'user': "{{ }}",
+    #           'port': "{{ }}",
+    #           'identity_file': "{{ }}", }
+    #       with_items: "{{ server.results }}"
+    #       register: instance_config_dict
+
+    #     - name: Convert instance config dict to a list
+    #       ansible.builtin.set_fact:
+    #         instance_conf: "{{ instance_config_dict.results | map(attribute='ansible_facts.instance_conf_dict') | list }}"
+
+    #     - name: Dump instance config
+    #       ansible.builtin.copy:
+    #         content: |
+    #           # Molecule managed
+
+    #           {{ instance_conf | to_json | from_json | to_yaml }}
+    #         dest: "{{ molecule_instance_config }}"
+    #         mode: 0600

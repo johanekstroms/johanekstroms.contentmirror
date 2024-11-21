@@ -1,0 +1,28 @@
+---
+# tasks file for raw
+- name: Block mirrors content from src to dst
+  block:
+    - name: Get src content
+      ansible.builtin.get_url:
+        url: '{{ raw_src }}'
+        dest: /tmp/file
+        # return_content: true
+      register: return_src
+      failed_when: return_src.status_code != 200
+
+    - name: Upload the content to dst
+      ansible.builtin.uri:
+        url: '{{ raw_dst }}'
+        method: POST
+        src: /tmp/file
+        # headers:
+          # Content-Type: '{{ return_src.content_type }}'
+          # Content-Type: "application/octet-stream"
+          # Content-Transfer-Encoding: "base64"
+        status_code: 201
+
+  always:
+    - name: Debug return_src
+      ansible.builtin.debug:
+        var: return_src
+      when: return_src.status_code != 200

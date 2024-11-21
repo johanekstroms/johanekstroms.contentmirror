@@ -1,0 +1,26 @@
+---
+# tasks file for raw
+- name: Block that checks dst
+  block:
+    - name: Check if dst is available using HEAD request
+      ansible.builtin.uri:
+        url: '{{ raw_dst }}'
+        method: HEAD
+      register: return_dst
+      failed_when: return_dst.status != 200
+
+    - name: Validate etag is defined in the header
+      ansible.builtin.assert:
+        that:
+          - return_dst.etag is defined
+        fail_msg: "etag is not supported on dst server"
+        quiet: true
+  rescue:
+    - name: Set rawcontentmirror_mirror_needed
+      ansible.builtin.set_fact:
+        rawcontentmirror_mirror_needed: true
+  always:
+    - name: Debug return_dst
+      ansible.builtin.debug:
+        var: return_dst
+      when: return_dst.status != 200

@@ -1,0 +1,20 @@
+---
+- name: Converge
+  hosts: converge
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Check var raw_dst
+      ansible.builtin.assert:
+        that: raw_dst is defined
+    - name: Check var raw_src
+      ansible.builtin.assert:
+        that: raw_src is defined
+
+    - name: "Include raw"
+      ansible.builtin.include_role:
+        name: "raw"
+
+    - name: "Include raw again"
+      ansible.builtin.include_role:
+        name: "raw"

@@ -1,0 +1,7 @@
+---
+all:
+  hosts:
+    localhost:
+      download_raw_files:
+        - src: http://localhost:8080/content/testfil
+          dst: http://localhost:8080/content/testfil

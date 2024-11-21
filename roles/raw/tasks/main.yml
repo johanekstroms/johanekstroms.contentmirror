@@ -1,0 +1,16 @@
+---
+# tasks file for raw
+- name: Set raw_mirror_needed
+  ansible.builtin.set_fact:
+    raw_mirror_needed: false
+
+- name: Include _check_dst
+  ansible.builtin.include_tasks: _check_dst.yml
+
+- name: Include _check_src
+  ansible.builtin.include_tasks: _check_src.yml
+  when: not raw_mirror_needed
+
+- name: Include _mirror_src_to_dst
+  ansible.builtin.include_tasks: _mirror_src_to_dst.yml
+  when: raw_mirror_needed
