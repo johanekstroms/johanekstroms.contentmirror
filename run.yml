@@ -1,15 +1,14 @@
 ---
 - name: Run contentmirror.raw role
-  hosts: localhost
+  hosts: all
   connection: local
   gather_facts: true
   tasks:
-    - name: 'Include raw'
+    - name: Run raw role
       ansible.builtin.include_role:
         name: raw
       vars:
-        raw_src: '{{ raw_file.src }}'
-        raw_dst: '{{ raw_file.dst }}'
-      loop: '{{ download_raw_files }}'
-      loop_control:
-        loop_var: raw_file
+        raw_src: '{{ src }}'
+        raw_dst: '{{ dst }}'
+        raw_dst_auth_user: '{{ dst_auth_user | default(omit) }}'
+        raw_dst_auth_password: '{{ dst_auth_password | default(omit) }}'

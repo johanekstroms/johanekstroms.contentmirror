@@ -20,4 +20,12 @@ argument_specs:
       raw_dst: &raw_dst
         type: str
         required: true
-        description: The destination where the content should be mirrored to
+        description: The destination where the content should be mirrored
+      raw_dst_auth_user: &raw_dst_auth_user
+        type: str
+        required: false
+        description: The auth user for destination where the content should be mirrored
+      raw_dst_auth_password: &raw_dst_auth_password
+        type: str
+        required: false
+        description: The auth password for destination where the content should be mirrored

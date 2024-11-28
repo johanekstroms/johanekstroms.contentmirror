@@ -2,27 +2,49 @@
 # tasks file for raw
 - name: Block mirrors content from src to dst
   block:
-    - name: Get src content
+    - name: Get src content file
       ansible.builtin.get_url:
-        url: '{{ raw_src }}'
-        dest: /tmp/file
-        # return_content: true
-      register: return_src
-      failed_when: return_src.status_code != 200
+        url: "{{ raw_src }}"
+        dest: "/tmp/{{ inventory_hostname }}_file"
+      register: return_get_url_src
+      failed_when: return_get_url_src.status_code != 200
 
     - name: Upload the content to dst
       ansible.builtin.uri:
-        url: '{{ raw_dst }}'
-        method: POST
-        src: /tmp/file
-        # headers:
-          # Content-Type: '{{ return_src.content_type }}'
-          # Content-Type: "application/octet-stream"
-          # Content-Transfer-Encoding: "base64"
-        status_code: 201
+        url: "{{ raw_dst }}"
+        method: PUT
+        src: "/tmp/{{ inventory_hostname }}_file"
+        user: "{{ raw_dst_auth_user | default(omit) }}"
+        password: "{{ raw_dst_auth_password | default(omit) }}"
+        force_basic_auth: "{{ raw_dst_auth_user is defined and raw_dst_auth_user !='' }}"
+        headers:
+          Content-Type: "application/octet-stream"
+        status_code:
+          - 200
+          - 201
+      register: return_dst_upload
 
   always:
-    - name: Debug return_src
+    - name: Debug return_get_url_src
       ansible.builtin.debug:
-        var: return_src
-      when: return_src.status_code != 200
+        var: return_get_url_src
+      when: return_get_url_src.status_code != 200
+
+    - name: Debug return_dst_upload failed reason
+      ansible.builtin.debug:
+        var: return_dst_upload.msg
+      when: return_dst_upload.failed is defined and return_dst_upload.failed
+
+- name: Validate dst file
+  block:
+    - name: Download file from dst to same file to make sure the file integrity
+      ansible.builtin.get_url:
+        url: "{{ raw_dst }}"
+        dest: "/tmp/{{ inventory_hostname }}_file"
+      register: return_get_url_dst
+      failed_when: return_get_url_dst.changed
+
+    - name: Debug return_get_url_dst
+      ansible.builtin.debug:
+        var: return_get_url_dst
+      when: return_get_url_dst.status_code != 200 or return_get_url_dst.changed

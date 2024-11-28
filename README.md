@@ -20,6 +20,13 @@ ansible-galaxy collection install -r requirements.yml
 molecule test
 ```
 
+## Setup a local Sonar Nexus 3
+
+```bash
+docker volume create --name nexus-data
+docker run -d -p 8081:8081 --name nexus -v nexus-data:/nexus-data sonatype/nexus3
+```
+
 ## Playbook example
 
 ```yaml

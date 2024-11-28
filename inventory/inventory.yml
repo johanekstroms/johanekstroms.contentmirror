@@ -1,7 +1,13 @@
 ---
 all:
   hosts:
-    localhost:
-      download_raw_files:
-        - src: http://localhost:8080/content/testfil
-          dst: http://localhost:8080/content/testfil
+    opentofu-0.45.0.tar.gz:
+      src: https://gitlab.com/components/opentofu/-/archive/0.45.0/opentofu-0.45.0.tar.gz
+      dst: http://localhost:8081/repository/raw-test/test2/opentofu-0.45.0.tar.gz
+      dst_auth_user: admin
+      dst_auth_password: admin123
+    opentofu-0.44.0.tar.gz:
+      src: https://gitlab.com/components/opentofu/-/archive/0.44.0/opentofu-0.44.0.tar.gz
+      dst: http://localhost:8081/repository/raw-test/test2/opentofu-0.44.0.tar.gz
+      dst_auth_user: admin
+      dst_auth_password: admin123
