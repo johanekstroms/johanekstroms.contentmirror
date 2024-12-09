@@ -1,0 +1,13 @@
+---
+# tasks file for oci
+- name: Pull OCI from source
+  ansible.builtin.podman_image:
+    name: "{{ oci_src }}"
+    # username: "{{ oci_src_auth_user | default(omit) }}"
+    # password: "{{ oci_src_auth_password | default(omit) }}"
+    tag: "{{ oci_src_tag | default('latest') }}"
+
+# - name: Upload OCI to destination
+#   ansible.builtin.podman_image:
+#     name: "{{ oci_src }}"
+#     tag: "{{ oci_src_tag }}"

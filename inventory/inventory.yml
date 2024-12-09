@@ -1,5 +1,5 @@
 ---
-all:
+raw:
   hosts:
     opentofu-0.45.0.tar.gz:
       src: https://gitlab.com/components/opentofu/-/archive/0.45.0/opentofu-0.45.0.tar.gz
@@ -9,5 +9,12 @@ all:
     opentofu-0.44.0.tar.gz:
       src: https://gitlab.com/components/opentofu/-/archive/0.44.0/opentofu-0.44.0.tar.gz
       dst: http://localhost:8081/repository/raw-test/test2/opentofu-0.44.0.tar.gz
+      dst_auth_user: admin
+      dst_auth_password: admin123
+oci:
+  hosts:
+    alpine-latest:
+      src: "docker.io/library/alpine:latest"
+      dst: localhost:8081/alpine
       dst_auth_user: admin
       dst_auth_password: admin123

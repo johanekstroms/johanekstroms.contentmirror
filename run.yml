@@ -1,8 +1,10 @@
 ---
-- name: Run contentmirror.raw role
-  hosts: all
+- name: Run contentmirror.raw
+  hosts: raw
   connection: local
-  gather_facts: true
+  gather_facts: false
+  tags:
+    - raw
   tasks:
     - name: Run raw role
       ansible.builtin.include_role:
@@ -12,3 +14,19 @@
         raw_dst: '{{ dst }}'
         raw_dst_auth_user: '{{ dst_auth_user | default(omit) }}'
         raw_dst_auth_password: '{{ dst_auth_password | default(omit) }}'
+
+- name: Run contentmirror.oci
+  hosts: oci
+  connection: local
+  gather_facts: false
+  tags:
+    - oci
+  tasks:
+    - name: Run oci role
+      ansible.builtin.include_role:
+        name: oci
+      vars:
+        oci_src: '{{ src }}'
+        oci_dst: '{{ dst }}'
+        oci_dst_auth_user: '{{ dst_auth_user | default(omit) }}'
+        oci_dst_auth_password: '{{ dst_auth_password | default(omit) }}'

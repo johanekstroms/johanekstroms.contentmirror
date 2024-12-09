@@ -1,0 +1,46 @@
+---
+argument_specs:
+  # anchor definitions
+  # roles/oci/tasks/main.yml entry point
+  main:
+    short_description: The Main entry point of the role johanekstroms.contentmirror.oci
+    description:
+      - The Main entry point of the role oci that will do the following
+      - validate input
+      - download oci source
+      - upload oci to destination
+    author:
+      - Johan Ekstrom
+    options:
+      oci_src: &oci_src
+        type: str
+        required: true
+        description: The source from where the content should be mirrored
+      oci_src_tag: &oci_src_tag
+        type: str
+        required: false
+        description: The tag version that should be pulled from the source
+      oci_src_auth_user: &oci_src_auth_user
+        type: str
+        required: false
+        description: (Optional) The auth user for source OCI registry
+      oci_src_auth_password: &oci_src_auth_password
+        type: str
+        required: false
+        description: (Optional) The auth password for source OCI registry
+      oci_dst: &oci_dst
+        type: str
+        required: true
+        description: The destination where the content should be mirrored
+      oci_dst_tag: &oci_dst_tag
+        type: str
+        required: false
+        description: The tag version that the OCI should be uploaded with to destination
+      oci_dst_auth_user: &oci_dst_auth_user
+        type: str
+        required: false
+        description: (Optional) The auth user for destination OCI registry
+      oci_dst_auth_password: &oci_dst_auth_password
+        type: str
+        required: false
+        description: (Optional) The auth password for destination OCI registry
